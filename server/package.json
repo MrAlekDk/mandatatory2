@@ -1,4 +1,5 @@
 {
+  "type" : "module",
   "name": "boutique_server",
   "version": "1.0.0",
   "description": "The backend for my French boutique project",
