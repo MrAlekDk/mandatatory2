@@ -1,0 +1,14 @@
+{
+  "name": "boutique_server",
+  "version": "1.0.0",
+  "description": "The backend for my French boutique project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexander Soerensen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
