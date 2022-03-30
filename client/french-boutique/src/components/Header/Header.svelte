@@ -5,7 +5,7 @@ let eiffelSource = "./images/eiffel-tower.png"
 </script>
 <div class="header-box">
     <h1>La Boutique Manifique</h1>
-    <img alt="The Eiffel-tower">
+    <img src={eiffelSource} alt="The Eiffel-tower" class="eiffel-tower">
     <Basket />
 </div>
 <Navbar />
@@ -18,5 +18,14 @@ let eiffelSource = "./images/eiffel-tower.png"
 }
 h1{
     font-size: 50px;
+    color: white;
+    text-shadow: 3px 3px #141313;
+}
+
+.eiffel-tower{
+    min-height: 2.5%;
+    min-width: 2.5%;
+    max-height: 5%;
+    max-width: 5%;
 }
 </style>
