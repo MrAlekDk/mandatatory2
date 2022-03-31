@@ -3,11 +3,12 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+import path from "path";
+app.use(express.static(path.resolve("../client/french-boutique/public")));
 
-
-app.get("/", (req,res)=>{
-    res.send("Yes it works")
-});
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve("../client/french-boutique/public/index.html"))
+  })
 
 
 
