@@ -45,7 +45,8 @@
     .login-container{
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-end;
+        align-items: flex-end;
         overflow: hidden;
     }
     .login-header{
@@ -65,7 +66,6 @@
         height:80%;
         width:max-content;
         margin: 0;
-        padding: 0;
     }
     h3{
         color: white;
@@ -76,7 +76,7 @@
 
     form{
         display: flex;
-        flex-direction: row;
+        flex-direction: row-reverse;
         align-self: center;
         justify-self: flex-start;
     }
@@ -97,8 +97,7 @@
     button{
         align-self: center;
         justify-self: flex-start;
-        margin-left:0;
-        padding-left:0;
+        text-align: center;
     }
 
 </style>

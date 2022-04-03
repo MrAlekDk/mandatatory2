@@ -23,8 +23,8 @@ let eiffelSource = "./images/eiffel-tower.png"
     <div class="eiffel-box">
         <img src={eiffelSource} alt="The Eiffel-tower" class="eiffel-tower">
     </div>
-    <Login />
     <Basket />
+    <Login />
 </div>
 <Navbar />
 
