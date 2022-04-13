@@ -4,13 +4,12 @@
 
     </script>
     <Header />
-    
+    <h1>Frontpage</h1>
     <Footer />
     <main>
         
     
     </main>
-    
     <style>
         :global(body){
             padding: 0;

@@ -1,6 +1,7 @@
 <script>
 	import { useNavigate, useLocation } from "svelte-navigator";
-	//import { user } from "./stores";
+    import { notifications } from "../../../store/notifications.js";
+    import Toast from "../../../components/Popups/Toast.svelte";
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -9,19 +10,42 @@
 	let password;
     let userSrc = "./images/user.png"
 
-	function handleSubmit() {
-		user.set({ username, password });
-		const from = ($location.state && $location.state.from) || "/";
-		navigate(from, { replace: true });
+	async function handleSubmit() {
+		const res = await fetch("http://localhost:3000/login",{
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers:{
+                "content-type": "application/json"
+            }
+        })
+        .then(res =>{
+            if(res.ok){
+                notifications.success("Logged in with email: "+username, 3000)
+                const from = ($location.state && $location.state.from) || "/";
+		        navigate("/dashboard", from, { replace: true });
+            }
+            else{
+                notifications.warning('Wrong information given at login attempt!', 5000);
+            }
+        })
+        
 	}
+
+    function redirect(){
+        console.log("Redirect to dashboard here")
+        const from = ($location.state && $location.state.from) || "/";
+		navigate("/dashboard", from, { replace: true });
+    }
 </script>
 
 <div class="login-container">
     <div class="login-header">
-        <img src={userSrc} alt="User icon">
-        <h3>Login</h3>
+        <img src={userSrc} alt="User icon" on:click|preventDefault={redirect}>
     </div>
-    <form on:submit={handleSubmit}>
+    <form on:submit|preventDefault={handleSubmit}>
         <span class="inputs">
             <input
                 bind:value={username}
@@ -54,7 +78,7 @@
         flex-direction: column;
         justify-content: center;
         align-self: center;
-        
+       padding-right: 1.5%;
     }
 
     .login-header:hover{
@@ -65,18 +89,11 @@
         align-self: center;
         height:80%;
         width:max-content;
-        margin: 0;
-    }
-    h3{
-        color: white;
-        align-self: center;
-        margin: 0;
-        padding: 0;
     }
 
     form{
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: row;
         align-self: center;
         justify-self: flex-start;
     }
@@ -93,6 +110,7 @@
         align-self: flex-start;
         min-width:50%;
         max-width: 70%;
+        margin: 0 auto;
     }
     button{
         align-self: center;
