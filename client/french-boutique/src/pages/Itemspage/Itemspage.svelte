@@ -33,7 +33,6 @@ onMount(async ()=>{
 </div>
 <Footer />
 <style>
-    
     h1{
     min-width: fit-content;
     font-size: 72px;

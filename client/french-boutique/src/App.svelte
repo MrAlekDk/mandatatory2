@@ -20,7 +20,8 @@
 	<Route path="/merch" component={Itemspage} />
 	<Route path="/about" component={About} />
 	<Route path="/checkout" component={Checkout} />
-	<PrivateRoute path="dashboard" let:location></PrivateRoute>	
+	<PrivateRoute path="/dashboard" let:location>
+	</PrivateRoute>	
 	<Route path="/*" component={Home} />
 </Router>
 <Toast />

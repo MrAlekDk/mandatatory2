@@ -1,14 +1,24 @@
 import express from "express";
-import db from "../database/createConnection.js"
-import bcrypt from "bcrypt"
-import mailer from "../mailer/emailer.js"
+import db from "../database/createConnection.js";
+import bcrypt from "bcrypt";
+import mailer from "../mailer/emailer.js";
+import session from "express-session";
+
 
 const router = express.Router();
+router.use(session(
+    {
+        secret: 'keyboard cat shhh',
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false }
+    }
+));
 
-router.use(express.json())
+router.use(express.json());
 
 router.post("/register",async (req,res)=>{
-    const { email, password } = req.body
+    const { email, password } = req.body;
     const login = await db.users.findOne({email: email});
     if(login === null){
         try{
@@ -28,23 +38,39 @@ router.post("/register",async (req,res)=>{
 });
 
 router.post("/login", async (req,res)=>{
-    const login = await db.users.findOne({email: req.body.username});
-    if(login === null){
-        res.sendStatus(404)
-        return;
+    const user = await db.users.findOne({email: req.body.username});
+    if(user === null){
+        res.status(400).send("User doesn't exist");
     }
-    try{
-        if(await bcrypt.compare(req.body.password, login.password)){
-            res.sendStatus(200);
-        } else {
-            res.status(400).send("Wrong password");
+    else{
+        try{
+            if(await bcrypt.compare(req.body.password, user.password)){
+                req.session.user = user;
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(400).send("Wrong password");
+            }
         }
-        
+        catch{
+            //this catch will cause problems when you only enter an email and press login
+            //res.sendStatus(500);
+        }
     }
-    catch{
-        res.sendStatus(500);
-    }
-    
 });
+
+router.post("/logOut", (req,res)=>{
+        req.session.user = null;
+        res.sendStatus(200)
+    });
+
+router.post("/authorize", (req,res)=>{
+    const user = req.session.user
+    if(user){
+      res.status(200).send({user: user.email})
+    }
+    else{
+        res.sendStatus(403)
+    }
+  })
 
 export default router;
