@@ -2,8 +2,7 @@
 	import { useNavigate, useLocation } from "svelte-navigator";
     import { notifications } from "../../../store/notifications.js";
     import Toast from "../../../components/Popups/Toast.svelte";
-    import { store } from "../../../store/auth.js"
-    //import { user } from "../../../store/global.js";
+    import { onMount } from "svelte";
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -12,9 +11,21 @@
 	let password;
     let userSrc = "./images/user.png"
 
-	async function handleSubmit() {
-        if($store){
-            const res = await fetch("http://localhost:3000/logOut", {
+    let user;
+
+    onMount(async ()=>{
+        try{
+            user = JSON.parse(localStorage.getItem("user"));
+        }
+        catch{
+            console.log("No user logged in")
+        }
+    })
+    
+    async function handleSubmit() {
+        
+        if(user){
+            await fetch("http://localhost:3000/logOut", {
             method: 'POST',
             body: JSON.stringify({
                 username: username,
@@ -26,7 +37,7 @@
         });
         const from = ($location.state && $location.state.from) || "/";
         navigate("/frontpage", from, { replace: true });
-        $store=null;
+        localStorage.removeItem("user");
     }
         else{
             const res = await fetch("http://localhost:3000/login", {
@@ -36,14 +47,16 @@
                 password: password
             }),
             headers:{
-                "content-type": "application/json"
+                "content-type": "application/json",
             }
         });
+        
         if(res.ok){
+            let data = await res.json()
+            console.log(data)
                 notifications.success("Logged in with email: "+ username, 3000)
             
-                const user = {email: username};
-                $store = { user }
+                localStorage.setItem("user", JSON.stringify(data.user));
                 const from = ($location.state && $location.state.from) || "/";
                 navigate("/dashboard", from, { replace: true });
             }
@@ -51,32 +64,28 @@
                 notifications.warning('Wrong information given at login attempt!', 5000);
             }
 	}
+
         }
 
         
     async function redirect(){
-        /*store.subscribe(value =>{
-            console.log(value)
-
-            if(value){
-            console.log(value.name)
-            const from = ($location.state && $location.state.from) || "/";
-		    navigate("/dashboard", from, { replace: true });
+        if(!user){
+            notifications.warning('You are not logged in!', 5000); 
+            return;
         }
-        });*/
 
-        const res = await fetch("http://localhost:3000/authorize", {
+        const token = "Bearer" + user.token
+        const res = await fetch("http://localhost:3000/dashboard", {
             method: 'POST',
             body: JSON.stringify({
-                
             }),
             headers:{
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "Authorization": `Bearer ${user.token}`
             }
-        })
-        
+        });
+
         if(res.ok){
-            console.log("Redirect to dashboard here")
             const from = ($location.state && $location.state.from) || "/";
 		    navigate("/dashboard", from, { replace: true });
         }
@@ -106,12 +115,12 @@
                 placeholder="Password"
             />
         </span>
-        {#if $store}
+        {#if user}
             <button type="submit">Logout</button>
         {/if}
-        {#if !$store}
+        {#if !user}
         <button type="submit">Login</button>
-        {/if}
+        {/if}-->
     </form>
 </div>
 

@@ -10,14 +10,15 @@ app.use(express.static(path.resolve("../client/french-boutique/public")));
 
 import itemsRouter from "./routes/items.js";
 app.use(itemsRouter);
-import authRouter from "./routes/auth.js";
+import {authRouter, authToken} from "./routes/auth.js";
 app.use(authRouter);
 import emailRouter from "./routes/emailer.js";
 app.use(emailRouter);
 
 
-app.get("/dashboard", (req,res)=>{
-  if(req.session.user){
+app.post("/dashboard", authToken, (req,res)=>{
+  console.log("dashboard")
+  if(req.user){
     console.log("You are authorized")
     res.sendFile(path.resolve("../client/french-boutique/public/index.html"))
   }

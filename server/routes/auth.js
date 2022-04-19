@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import mailer from "../mailer/emailer.js";
 import session from "express-session";
 
+import jwt from "jsonwebtoken";
+
 
 const router = express.Router();
 router.use(session(
@@ -38,15 +40,17 @@ router.post("/register",async (req,res)=>{
 });
 
 router.post("/login", async (req,res)=>{
-    const user = await db.users.findOne({email: req.body.username});
+    let user = await db.users.findOne({email: req.body.username});
     if(user === null){
         res.status(400).send("User doesn't exist");
     }
     else{
         try{
             if(await bcrypt.compare(req.body.password, user.password)){
-                req.session.user = user;
-                res.sendStatus(200);
+                const accesToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+                user.token = accesToken;
+                console.log(user)
+                res.json({user, user})
             } else {
                 res.sendStatus(400).send("Wrong password");
             }
@@ -58,19 +62,23 @@ router.post("/login", async (req,res)=>{
     }
 });
 
+function authenticateToken(req, res, next){
+    console.log("Let's see what u got")
+    const authHeader = req.headers["authorization"]
+    const token = authHeader && authHeader.split(" ")[1]
+    console.log(authHeader)
+    if(token === null) return res.sendStatus(401);
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next()
+    });
+}
+
 router.post("/logOut", (req,res)=>{
-        req.session.user = null;
+
         res.sendStatus(200)
     });
 
-router.post("/authorize", (req,res)=>{
-    const user = req.session.user
-    if(user){
-      res.status(200).send({user: user.email})
-    }
-    else{
-        res.sendStatus(403)
-    }
-  })
-
-export default router;
+export const authRouter = router;
+export const authToken = authenticateToken;

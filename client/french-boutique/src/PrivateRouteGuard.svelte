@@ -1,6 +1,5 @@
 <script>
 	import { useNavigate, useLocation } from "svelte-navigator";
-	import { store } from "./store/auth.js";
     import { notifications } from "./store/notifications.js"
     import Toast from "./components/Popups/Toast.svelte"
 	import Dashboard from "./pages/Dashboard/Dashboard.svelte"
@@ -8,28 +7,24 @@
 
 	const navigate = useNavigate();
 	const location = useLocation();
-
-
 	
+	let user;
+
 	onMount(async () => {
-		const res = await fetch("http://localhost:3000/authorize", {
-            method: 'POST',
-            body: JSON.stringify({
-            }),
-            headers:{
-                "content-type": "application/json"
-            }
-        });
-		if(!res.ok){
+		try{
+			user = JSON.parse(localStorage.getItem("user"));
+		}
+		catch{
+			console.log("Error in privateRoute")
+		}
+		if(!user){
 			notifications.warning("Not logged in, no access!", 5000);
 			const from = ($location.state && $location.state.from) || "/";
             navigate("/", from, { replace: true });
 		}
-		let data = await res.json()
-		$store = data
 	})
 </script>
-{#if $store}
+{#if user}
 	<slot />
 	<Dashboard/>
 {/if}
