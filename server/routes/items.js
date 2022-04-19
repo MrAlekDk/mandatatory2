@@ -26,10 +26,6 @@ router.post("/items", async(req,res)=>{
     res.send(200)
 })
 
-router.patch("/items/:id", async(req,res)=>{
-
-})
-
 router.delete("/items/:id", async(req,res)=>{
     const deletedItem = await db.items.deleteOne({id: Number(req.params.id)})
 })

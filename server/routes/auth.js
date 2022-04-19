@@ -76,7 +76,6 @@ function authenticateToken(req, res, next){
 }
 
 router.post("/logOut", (req,res)=>{
-
         res.sendStatus(200)
     });
 

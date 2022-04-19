@@ -1,5 +1,4 @@
 import express from "express";
-import session from "express-session";
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -17,7 +16,6 @@ app.use(emailRouter);
 
 
 app.post("/dashboard", authToken, (req,res)=>{
-  console.log("dashboard")
   if(req.user){
     console.log("You are authorized")
     res.sendFile(path.resolve("../client/french-boutique/public/index.html"))

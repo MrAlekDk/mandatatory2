@@ -6,7 +6,7 @@ router.use(express.json());
 
 router.post("/sendEmail", async (req,res)=>{
     const { name, message } = req.body
-    mailer.sendNewEmail(process.env.BUSINESS_EMAIL, "Message on LBM from: " + req.body.name, req.body.message);
+    mailer.sendNewEmail(process.env.BUSINESS_EMAIL, "Message on LBM from: " + name, message);
 
     res.sendStatus(202)
 });

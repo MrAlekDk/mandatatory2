@@ -8,7 +8,9 @@
 <Header />
 <h1>Welcome to {user.email}</h1>
 <p>This is the dashboard</p>
-<p></p>
+{#if user.admin}
+<p>You are an admin</p>
+{/if}
 <Footer />
 <style>
 

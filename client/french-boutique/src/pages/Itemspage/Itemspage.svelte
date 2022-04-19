@@ -2,11 +2,8 @@
 import Header from "../../components/Header/Header.svelte";
 import Footer from "../../components/Footer/Footer.svelte";
 import Item from "./Item/Item.svelte"
-
-
 import { onMount } from "svelte";
 import { each } from "svelte/internal";
-
 import { useLocation } from "svelte-navigator"
 
 const location = useLocation();
@@ -37,7 +34,7 @@ onMount(async ()=>{
     min-width: fit-content;
     font-size: 72px;
     color: white;
-    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+    -webkit-text-fill-color: white; 
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
     text-shadow: 3px 3px #141313;

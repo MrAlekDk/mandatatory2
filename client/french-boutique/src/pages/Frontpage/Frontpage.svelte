@@ -128,8 +128,6 @@ function showSlides() {
             min-width: 100%;
             min-height: 100%
         }
-
-        /* Fading animation */
 .fade {
   animation-name: fade;
   animation-duration: 2.5s;

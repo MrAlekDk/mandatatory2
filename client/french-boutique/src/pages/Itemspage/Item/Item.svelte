@@ -1,7 +1,6 @@
 <script>
 export let item;;
 
-
 </script>
 
 <div class="item">

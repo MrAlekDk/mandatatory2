@@ -120,7 +120,7 @@
         {/if}
         {#if !user}
         <button type="submit">Login</button>
-        {/if}-->
+        {/if}
     </form>
 </div>
 
